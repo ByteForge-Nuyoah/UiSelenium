@@ -1,0 +1,17 @@
+case_common:
+  allure_epic: workspace
+  allure_feature: 个人中心
+
+my_account_page_update:
+  allure_story: 更新基本信息
+  cases:
+    - title: "更新个人信息: 修改姓名、手机号和邮箱"
+      run: true
+      severity: normal
+      # 前置登录账号
+      login_user: "${username}"
+      login_password: "${password}"
+      # 测试数据
+      name: "测试"
+      phone: "13147147147"
+      email: "workspace@example.com"

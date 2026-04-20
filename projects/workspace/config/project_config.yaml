@@ -1,0 +1,142 @@
+# ---------------------- 运行配置 ----------------------
+run:
+  # 是否生成allure html report，支持: yes, no
+  report: "yes"
+  
+  # 是否自动打开allure html report，支持: yes, no
+  open: "yes"
+  
+  # 运行环境: test, live
+  env: "test"
+  
+  # 浏览器驱动类型: chrome, firefox, edge, chrome-headless, etc.
+  driver_type: "chrome"
+  
+  # 失败重跑次数
+  rerun: 0
+  
+  # 失败重跑间隔时间(秒)
+  reruns_delay: 5
+  
+  # 当达到最大失败数，停止执行
+  max_fail: 10
+  
+  # 运行的标记 (pytest -m)
+  m: null
+  
+  # 定时任务配置
+  cron:
+    enabled: false  # 是否开启定时任务
+    time: "22:00"   # 每天执行时间 (24小时制)
+
+  # 指定运行的项目名称
+  project: "workspace"
+  
+  # 指定运行的测试文件或目录路径
+  path: null
+
+  # --- 报告公共配置 ---
+  报告标题: "UI自动化测试报告"
+  项目名称: "workspace"
+  tester: "会飞的🐟"
+  department: "成都研发"
+
+# ---------------------- 业务配置 ----------------------
+test:
+  host: "https://workspace-dev.spreadwin.cn"
+  url: "https://crmapi-dev.spreadwin.cn"
+  username: "admin"
+  password: "123123"
+  appPlatform: "work-space"
+  appVersion: "1.0.1"
+
+pre:
+  host: ""
+
+# ---------------------- 公共通知配置 ----------------------
+public:
+  # 0: None, 1: DingTalk, 2: WeChat, 3: Email, 4: All
+  send_result_type: 4
+  
+  # 日志级别
+  log_level: "INFO"
+  
+  email:
+    user: "18728441645@163.com"
+    password: "RFUFJRLJHVYBYXWV"
+    host: "smtp.163.com"
+    to: 
+      - "1125565732@qq.com"
+
+  ding_talk:
+    webhook_url: "https://oapi.dingtalk.com/robot/send?access_token=15d5b81b7ebed4e5819c4ae110d5f99352033c5c01a37982cb8fc30484f6ba2a"
+    secret: "SEC950a24f6218797aa0fd7a86593932fba5ab69efcfca933cc04872381236c63e8"
+
+  wechat:
+    webhook_url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=1c5ebd2a-b5d0-4d7e-8644-1367eaef4fc0"
+
+  notification:
+    email_subject: "UI自动化报告"
+    email_content: |
+           各位同事, 大家好:
+
+           自动化用例于 <strong>${start_time} </strong> 开始运行，运行时长：<strong>${run_time} s</strong>， 目前已执行完成。
+           ---------------------------------------------------------------------------------------------------------------
+           测试人：<strong> ${tester} </strong> 
+           所属部门：<strong> ${department} </strong>
+           项目环境：<strong> ${env} </strong>
+           ---------------------------------------------------------------------------------------------------------------
+           执行结果如下:
+           &nbsp;&nbsp;用例运行总数:<strong> ${total} 个</strong>
+           &nbsp;&nbsp;通过用例个数（passed）: <strong><font color="green" >${passed} 个</font></strong>
+           &nbsp;&nbsp;失败用例个数（failed）: <strong><font color="red" >${failed} 个</font></strong>
+           &nbsp;&nbsp;异常用例个数（error）: <strong><font color="orange" >${broken} 个</font></strong>
+           &nbsp;&nbsp;跳过用例个数（skipped）: <strong><font color="grey" >${skipped} 个</font></strong>
+           &nbsp;&nbsp;失败重试用例个数 * 次数之和（rerun）: <strong>${rerun} 个</strong>
+           &nbsp;&nbsp;成  功   率:<strong> <font color="green" >${pass_rate} %</font></strong>
+
+           **********************************
+           附件为具体的测试报告，详细情况可下载附件查看， 非相关负责人员可忽略此消息。谢谢。
+
+    ding_talk_title: "UI自动化报告"
+    ding_talk_content: |
+           各位同事, 大家好:
+
+           ### 自动化用例于 ${start_time} 开始运行，运行时长：${run_time} s， 目前已执行完成。
+            ---------------------------------------------------------------------------------------------------------------
+           #### 测试人： ${tester}
+           #### 所属部门： ${department}
+           #### 项目环境： ${env} 
+           ---------------------------------------------------------------------------------------------------------------
+           #### 执行结果如下:
+           - 用例运行总数: ${total} 个
+           - 通过用例个数（passed）: ${passed} 个
+           - 失败用例个数（failed）: ${failed} 个
+           - 异常用例个数（error）: ${broken} 个
+           - 跳过用例个数（skipped）: ${skipped} 个
+           - 失败重试用例个数 * 次数之和（rerun）: ${rerun} 个
+           - 成  功   率: ${pass_rate} %
+
+           **********************************
+           附件为具体的测试报告，详细情况可下载附件查看， 非相关负责人员可忽略此消息。谢谢。
+
+    wechat_content: |
+           各位同事, 大家好:
+
+           ### 自动化用例于 ${start_time} 开始运行，运行时长：${run_time} s， 目前已执行完成。
+           --------------------------------
+           #### 测试人： ${tester}
+           #### 所属部门： ${department}
+           #### 项目环境： ${env} 
+           --------------------------------
+           #### 执行结果如下:
+           - 用例运行总数: ${total} 个
+           - 通过用例个数（passed）:<font color="info"> ${passed} 个</font>
+           - 失败用例个数（failed）: <font color="warning"> ${failed}  个</font>
+           - 异常用例个数（error）: <font color="warning"> ${broken} 个</font>
+           - 跳过用例个数（skipped）: <font color="comment"> ${skipped} 个</font>
+           - 失败重试用例个数 * 次数之和（rerun）: <font color="comment"> ${rerun} 个</font>
+           - 成  功   率: <font color="info"> ${pass_rate} % </font>
+
+           **********************************
+           附件为具体的测试报告，详细情况可下载附件查看， 非相关负责人员可忽略此消息。谢谢。

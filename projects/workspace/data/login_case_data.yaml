@@ -1,0 +1,15 @@
+case_common:
+  allure_epic: workspace
+  allure_feature: 登录模块
+
+login_page_success:
+  allure_story: 登录
+  cases:
+    - title: "网页登录: 正确用户名和密码登录成功"
+      run: true
+      severity: normal
+      login_user: "${username}"
+      login_password: "${password}"
+      user: "${username}"
+      password: "${password}"
+      expected_user: "${username}"

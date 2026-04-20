@@ -1,0 +1,122 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# PEP 582
+__pypackages__/
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# mypy
+.mypy_cache/
+
+# Pyre
+.pyre/
+
+# pytype
+.pytype/
+
+# Cython debug
+cython_debug/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# ==================== Project Specific ====================
+
+# Output directories (reports, logs, screenshots)
+outputs/
+
+# Chrome browser data directories
+chrome_user_data/
+chrome_user_data_headless/
+.chrome_user_data/
+.chrome_user_data_headless/
+
+# Local browser drivers
+local_drivers/
+!local_drivers/.gitkeep
+
+# Driver cache
+drivers_cache/
+
+# Allure results
+allure-results/
+allure-report/
+
+# Log files
+*.log
+logs/
+
+# Sensitive configuration (contains passwords/tokens)
+env_config.yaml
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Keep empty directories
+!.gitkeep
