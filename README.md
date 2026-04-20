@@ -330,18 +330,6 @@ docker run --rm \
   ui-auto
 ```
 
-### Dockerfile 参数
-
-| ARG | 说明 | 默认值 |
-|-----|------|--------|
-| ENV | 运行环境 | test |
-| PROJECT | 项目名称 | workspace |
-
-## ⚠️ 注意事项
-
-### 1. macOS Chrome Sandbox 问题
-macOS 系统下，如果遇到 Chrome 启动崩溃或 Sandbox 报错，这是由于权限隔离导致的。建议在 `env_config.yaml` 中开启相关 Chrome 参数，或确保运行目录有足够权限。
-
 ### 2. 依赖管理
 新增第三方库后，请更新 `requirements.txt`：
 ```bash
@@ -356,12 +344,3 @@ pip freeze > requirements.txt
 ### 4. 截图配置
 - `success_screenshot: true` - 每条用例成功时截图
 - `success_screenshot: false` - 仅失败时截图（节省存储空间）
-
-## 📊 性能优化
-
-| 优化项 | 原配置 | 新配置 | 效果 |
-|--------|--------|--------|------|
-| 隐式等待 | 10s | 3s | 减少元素等待时间 |
-| 显式等待 | 30s | 10s | 加快超时检测 |
-| Session 复用 | 无 | 已登录复用 | 跳过重复登录 |
-| 运行时长 | ~12s | ~7s | 提升 40%+ |
