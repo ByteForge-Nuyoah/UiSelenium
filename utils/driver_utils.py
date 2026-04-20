@@ -72,13 +72,13 @@ class GetDriver:
         """
         获取本地 webdriver 目录下的驱动路径
         :param driver_name: 驱动文件名，如 chromedriver
-        :return: 驱动绝对路径 或 None
+        :return: 驱动绝对路径 或 None（让 Selenium Manager 自动管理）
         """
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         driver_path = os.path.join(project_root, "local_drivers", driver_name)
 
         if not os.path.exists(driver_path):
-            logger.warning(f"本地驱动文件不存在: {driver_path}，将尝试使用 Selenium Manager 自动获取")
+            logger.info(f"本地驱动文件不存在: {driver_path}，将使用 Selenium Manager 自动获取")
             return None
 
         # 确保有执行权限
@@ -89,6 +89,31 @@ class GetDriver:
 
         logger.info(f"使用本地驱动: {driver_path}")
         return driver_path
+
+    def _build_service(self, service_class, driver_name, env=None, service_args=None):
+        """
+        构建 Service 对象，智能处理本地驱动和 Selenium Manager
+        :param service_class: Service 类 (ChromeService, FirefoxService 等)
+        :param driver_name: 驱动文件名
+        :param env: 环境变量字典
+        :param service_args: Service 参数列表
+        :return: Service 实例
+        """
+        driver_path = self._get_local_driver_path(driver_name)
+        
+        # 如果本地驱动存在，使用指定路径的 Service
+        if driver_path:
+            return service_class(
+                executable_path=driver_path,
+                env=env or {},
+                service_args=service_args or []
+            )
+        
+        # 本地驱动不存在时，不指定 executable_path，让 Selenium Manager 自动管理
+        logger.info("使用 Selenium Manager 自动下载和管理驱动")
+        if env or service_args:
+            return service_class(env=env or {}, service_args=service_args or [])
+        return service_class()
 
     def chrome_driver(self):
         """
@@ -163,8 +188,9 @@ class GetDriver:
         env["TEMP"] = temp_dir
         env["TMP"] = temp_dir
 
-        service = ChromeService(
-            executable_path=self._get_local_driver_path("chromedriver"),
+        service = self._build_service(
+            ChromeService, 
+            "chromedriver", 
             env=env,
             service_args=["--disable-build-check", "--verbose", f"--log-path={os.path.join(user_data_dir, 'chromedriver.log')}"]
         )
@@ -247,8 +273,9 @@ class GetDriver:
         env["TEMP"] = temp_dir
         env["TMP"] = temp_dir
         
-        service = ChromeService(
-            executable_path=self._get_local_driver_path("chromedriver"),
+        service = self._build_service(
+            ChromeService, 
+            "chromedriver", 
             env=env,
             service_args=["--disable-build-check", "--verbose", f"--log-path={os.path.join(user_data_dir, 'chromedriver.log')}"]
         )
@@ -261,10 +288,7 @@ class GetDriver:
         """
         firefox浏览器，有头模式
         """
-        # 使用本地 webdriver 目录下的驱动
-        service = FirefoxService(
-            executable_path=self._get_local_driver_path("geckodriver")
-        )
+        service = self._build_service(FirefoxService, "geckodriver")
         driver = webdriver.Firefox(service=service)
         driver.maximize_window()
         driver.implicitly_wait(10)
@@ -279,9 +303,7 @@ class GetDriver:
         firefox_options.add_argument("--headless")
         firefox_options.add_argument("--disable-gpu")
 
-        service = FirefoxService(
-            executable_path=self._get_local_driver_path("geckodriver")
-        )
+        service = self._build_service(FirefoxService, "geckodriver")
         driver = webdriver.Firefox(service=service, options=firefox_options)
         driver.implicitly_wait(10)
         driver.delete_all_cookies()  # 清除浏览器所有缓存
@@ -299,10 +321,7 @@ class GetDriver:
             "excludeSwitches", ["enable-automation", "enable-logging"]
         )
 
-        # 使用本地 webdriver 目录下的驱动
-        service = EdgeService(
-            executable_path=self._get_local_driver_path("msedgedriver")
-        )
+        service = self._build_service(EdgeService, "msedgedriver")
         driver = webdriver.Edge(service=service, options=edge_options)
         driver.maximize_window()
         driver.implicitly_wait(10)
@@ -314,9 +333,7 @@ class GetDriver:
         微软IE浏览器
         """
         ie_options = webdriver.IeOptions()
-        service = IeService(
-            executable_path=self._get_local_driver_path("IEDriverServer")
-        )
+        service = self._build_service(IeService, "IEDriverServer")
         driver = webdriver.Edge(service=service, options=ie_options)
         driver.maximize_window()
         driver.implicitly_wait(10)
@@ -327,21 +344,12 @@ class GetDriver:
         """
         opera浏览器
         """
-        # selenium 4
-        # 注意：Opera 在 Selenium 4 中可能需要特殊处理或使用 Chrome 驱动兼容
-        # 这里假设使用本地 operadriver
-        webdriver_service = service.Service(
-            executable_path=self._get_local_driver_path("operadriver")
-        )
+        webdriver_service = self._build_service(service.Service, "operadriver")
         webdriver_service.start()
         options = webdriver.ChromeOptions()
         options.add_experimental_option("w3c", True)
         driver = webdriver.Remote(webdriver_service.service_url, options=options)
         driver.maximize_window()
         driver.implicitly_wait(10)
-        driver.delete_all_cookies()  # 清除浏览器所有缓存
-        return driver
-        driver.maximize_window()
-        driver.implicitly_wait(10)
-        driver.delete_all_cookies()  # 清除浏览器所有缓存
+        driver.delete_all_cookies()
         return driver
