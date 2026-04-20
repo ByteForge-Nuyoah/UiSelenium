@@ -69,11 +69,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: failure()
+    env:
+      DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
     
     steps:
       - name: DingTalk
-        if: ${{ secrets.DINGTALK_WEBHOOK != '' }}
+        if: ${{ env.DINGTALK_WEBHOOK != '' }}
         run: |
-          curl -s -X POST "${{ secrets.DINGTALK_WEBHOOK }}" \
+          curl -s -X POST "$DINGTALK_WEBHOOK" \
             -H 'Content-Type: application/json' \
             -d '{"msgtype":"text","text":{"content":"UI自动化测试失败\n仓库:${{ github.repository }}\n分支:${{ github.ref_name }}\n详情:${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}}'
